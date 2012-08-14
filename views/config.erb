@@ -1,0 +1,118 @@
+<%# coding: utf-8 %>
+<!DOCTYPE html>
+<html lang="jp">
+  <head>
+    <meta charset="utf-8">
+    <title>TwinCal</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/overwrite.css" rel="stylesheet">
+    <script src="js/jquery-1.8.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/validation.js"></script>
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">TwinCal</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#other">Other</a></li>
+              <li><a href="http://gam0022.net">Blog</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <!-- Main hero unit for a primary marketing message or call to action -->
+      <div class="hero-unit">
+        <h1>TwinCal</h1>
+        <p>TwinCalとは、Twinsからダウンロードした履修情報を含むCSVファイルをiCalendar形式に変換し、
+        Googleカレンダー・iCalへのインポートをサポートするWebアプリケーションです。</p>
+      </div>
+
+      <div class="row">
+        <div class="span12">
+          <form class="form-horizontal" action="convert.rb">
+            <fieldset>
+              <legend>学期の始めと終わりの日付</legend>
+              <p class="help-block">この日付を元に、カレンダーの繰り返しの設定を行います。</p>
+              <p class="help-block">次を参考にしてください。</p>
+              <p><a class="btn" href="http://www.tsukuba.ac.jp/education/calendar.html" target="_blank">学年暦 &raquo;</a></p>
+              <div class="control-group">
+
+                <label class="control-label" for="term_start">学期の始めの日付</label>
+                <div class="controls">
+                  <input type="date" class="input-xlarge validate required" name="term_start" value="2012-09-03">
+                  <!--p class="help-block">Supporting help text</p-->
+                </div>
+
+                <label class="control-label" for="term_end">学期の終わりの日付</label>
+                <div class="controls">
+                  <input type="date" class="input-xlarge validate required" name="term_end" value="2012-11-22">
+                </div>
+              </div>
+
+              <legend>授業の場所</legend>
+              <p class="help-block">このフォームで教室などを指定しておくと、カレンダーにも反映されます。</p>
+              <p class="help-block">次を参考にしてください。</p>
+              <p><a class="btn" href="http://www.tsukuba.ac.jp/education/ug-courses/index.html" target="_blank">開設授業科目一覧 &raquo;</a></p>
+              <div class="control-group">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>time</th>
+                      <th>code</th>
+                      <th>name</th>
+                      <th>location</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @subjects.each do |hash| %>
+                      <tr>
+                        <th><%= hash[:time_jp] %></th>
+                        <th><%= hash[:code] %></th>
+                        <th><%= hash[:name] %></th>
+                        <th>
+                          <input type="text" name="<%= "l_#{hash[:time]}" %>" value="<%= hash[:location] %>">
+                        </th>
+                      </tr>
+                      <input type="hidden" name="subject[]" value="<%= hash[:dump] %>">
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+
+              <input type="hidden" name="user" value="<%= @user %>">
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-large">Download .ics</button>
+                <a class="btn btn-large" href="./">Back</a>
+              </div>
+
+            </fieldset>
+          </form>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+      <p>Copyright &copy; 2012 - がむ(@gam0022)</p>
+      </footer>
+
+    </div> <!-- /container -->
+  </body>
+</html>
+
