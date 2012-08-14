@@ -12,7 +12,7 @@ $(function(){
     })
     //エラーの際の処理
     if($("p.alert-error").size() > 0){
-      $('html,body').animate({scrollTop: $("p.alert-error:first").offset().top-40 }, 'slow');
+      $('html,body').animate({scrollTop: ($("p.alert-error:first").offset().top-100) }, 'slow');
       return false;
     }
   }) 

@@ -46,19 +46,19 @@
         <div class="span12">
           <form class="form-horizontal" action="convert.rb">
             <fieldset>
-              <legend>学期の始めと終わりの日付</legend>
+              <legend>学期の開始日と終了日</legend>
               <p class="help-block">この日付を元に、カレンダーの繰り返しの設定を行います。</p>
               <p class="help-block">次を参考にしてください。</p>
               <p><a class="btn" href="http://www.tsukuba.ac.jp/education/calendar.html" target="_blank">学年暦 &raquo;</a></p>
               <div class="control-group">
 
-                <label class="control-label" for="term_start">学期の始めの日付</label>
+                <label class="control-label" for="term_start">開始日</label>
                 <div class="controls">
                   <input type="date" class="input-xlarge validate required" name="term_start" value="2012-09-03">
                   <!--p class="help-block">Supporting help text</p-->
                 </div>
 
-                <label class="control-label" for="term_end">学期の終わりの日付</label>
+                <label class="control-label" for="term_end">終了日</label>
                 <div class="controls">
                   <input type="date" class="input-xlarge validate required" name="term_end" value="2012-11-22">
                 </div>
@@ -88,7 +88,7 @@
                           <input type="text" name="<%= "l_#{hash[:time]}" %>" value="<%= hash[:location] %>">
                         </th>
                       </tr>
-                      <input type="hidden" name="subject[]" value="<%= hash[:dump] %>">
+                      <input type="hidden" name="subjects[]" value="<%= hash[:dump] %>">
                     <% end %>
                   </tbody>
                 </table>
@@ -115,4 +115,3 @@
     </div> <!-- /container -->
   </body>
 </html>
-

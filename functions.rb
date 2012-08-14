@@ -11,7 +11,7 @@ WEEK_MAP  = [nil, "MON", "TUE", "WED", "THU", "FRI", nil]
 P_START   = ["8:40", "10:10", "12:15", "13:45", "15:15", "16:45"]
 P_END     = ["9:55", "11:25", "13:30", "15:00", "16:30", "18:00"]
 
-Locations = {
+LOCATIONS = {
   "GB12016" => "3C301",
   "GB13604" => "3A207",
   "GB12301" => "3A202",
@@ -21,7 +21,10 @@ Locations = {
   "GB11111" => "3A304"
 }
 
-def get_subjects(raw_data)
+#
+# CSVテーブルを授業ごとの配列に変換する
+#
+def get_subjects_from_table(table)
   subjects = Array.new
 
   # 曜日
@@ -30,7 +33,7 @@ def get_subjects(raw_data)
     (0..5).each do |j|
       crow = ROW_PAD + j*3
       ccol = COL_PAD + i
-      if ((code_class = raw_data[crow][ccol]) != "未登録")
+      if ((code_class = table[crow][ccol]) != "未登録")
         # GB12016　1A:専門科目（必修）
         if /(\w+)　(.+)/ =~ code_class
           s = {
@@ -39,10 +42,10 @@ def get_subjects(raw_data)
             :time     => "#{week}#{j+1}",
             :time_jp  => "#{WEEK_JP[i]}#{j+1}",
             :code     => $1,
-            :name     => raw_data[crow+1][ccol],
+            :name     => table[crow+1][ccol],
             :class    => $2,
-            :teacher  => raw_data[crow+2][ccol],
-            :location => Locations[$1]
+            :teacher  => table[crow+2][ccol],
+            :location => LOCATIONS[$1]
             #:dump
             #:start
             #:end
@@ -59,26 +62,32 @@ def get_subjects(raw_data)
 end
 
 class Time
+
+  # http://www.asahi-net.or.jp/~CI5M-NMR/iCal/ref.html
+  # 日付と時刻を一緒に記述する時は、間を T で区切る。例： 19980119T230000
   def to_icsf
     self.strftime("%Y%m%dT%H%M00")
   end
 
-  def to_icsf_date
-    self.strftime("%Y%m%d")
-  end
-
 end
 
-def parse_params(params)
+#
+# 学期の終了日時をフォーマット済みの状態で求める
+#
+def get_term_end(params)
+  Time.parse("#{params["term_end"][0]} 20:00").to_icsf
+end
 
-  # 各曜日の学期初めの日付を求める
+#
+# 各曜日の授業開始日を求める
+#
+def get_term_start_each_wday(params)
+
+  term_start_each_wday = Array.new
+
   current = term_start = Date.parse(params["term_start"][0])
-  term_end = Time.parse("#{params["term_end"][0]} 20:00").to_icsf
-  #term_end = Time.parse(params["term_end"][0]).to_icsf_date
-
   i = yday = term_start.yday
   j = wday = term_start.wday
-  term_start_each_wday = Array.new
 
   while i < (yday + 7) do
     term_start_each_wday[j-1] = current.to_s if WEEK_MAP[j]
@@ -87,14 +96,22 @@ def parse_params(params)
     current = current.next
   end
 
-  # subjectsの復元
+  term_start_each_wday
+end
+
+#
+# CGIのパラメータからsubjectsを復元
+#
+def get_subjects_from_params(params)
+
   keys = [
     :wday, :period, :time, :time_jp, 
     :code, :name, :class, :teacher,
     :location, :dump,
     :start, :end
   ]
-  subjects = params["subject[]"].map do |item|
+  # ハッシュの配列にしたかった。これはひどい。
+  subjects = params["subjects[]"].map do |item|
     a = Hash.new
     item.split("::").each_with_index do |val, i|
       a[keys[i]] = val
@@ -102,20 +119,35 @@ def parse_params(params)
     a
   end
 
+  # 各曜日の授業開始日
+  term_start_each_wday = get_term_start_each_wday(params)
+
+  # subjectに追加情報を付加する
   subjects.each_with_index do |item, i|
-    # location
+    # 場所
     item[:location] = params["l_#{item[:time]}"][0]
-    # 授業の始まる時間・終わる時間
+    # 授業の開始日時と終了日時
     item[:start] = Time.parse("#{term_start_each_wday[item[:wday].to_i]} #{P_START[item[:period].to_i]}").to_icsf
     item[:end] = Time.parse("#{term_start_each_wday[item[:wday].to_i]} #{P_END[item[:period].to_i]}").to_icsf
   end
 
-  user = params["user"][0]
-
-  return subjects, term_end, user
+  return subjects
 end
 
-# 使ってくれた人の学籍番号をメモ
-def log(user)
-  `echo '#{user} - #{Time.now.to_s}' >> ./users.log`
+#
+# ログ
+# 
+def log(str, file)
+  `echo '#{str} - #{Time.now.to_s}' >> #{file}`
+end
+
+#
+# エラー処理は全部これ
+#
+def exception_handling(e, cgi)
+  print cgi.header( { 
+    "status"     => "REDIRECT",
+    "Location"   => "http://gam0022.net/app/twincal/?has_error=true"
+  })
+  log(e.to_s, "./error.log")
 end

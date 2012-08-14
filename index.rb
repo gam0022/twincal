@@ -23,10 +23,7 @@ begin
   puts cgi.header("charset"=>"UTF-8")
   puts View.new(has_error).to_html
 
-rescue
-  # エラー
-  print cgi.header( { 
-    "status"     => "REDIRECT",
-    "Location"   => "http://gam0022.net/app/twincal/?has_error=true"
-  })
+rescue => e
+  # エラー処理
+  exception_handling(e, cgi) 
 end

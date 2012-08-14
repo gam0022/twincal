@@ -73,11 +73,11 @@
           <form method="post" action="parse.rb" class="span6 well form-search" id="form1" enctype="multipart/form-data">
             <% if @has_error %>
               <p class="alert alert-error">
-                <a class="close" data-dismiss="alert" href="#">×</a>
-                CSVファイルに何か問題があるようです。
+              <a class="close" data-dismiss="alert" href="#">×</a>
+              CSVファイルに何か問題があるようです。
               </p>
               <script>
-                $('html,body').animate({scrollTop: $("p.alert:first").offset().top-40 }, 'slow');
+                $('html,body').animate({scrollTop: ($("p.alert:first").offset().top-100) }, 'slow');
               </script>
             <% end %>
             <input type="file" name="file" id="file" class="validate required">
@@ -127,15 +127,19 @@
       </div>
       <div class="row">
         <div class="span5 well" id="issues">
-          <p><a class="close" data-dismiss="alert" href="#">×</a>
+          <p>
+          <a class="close" data-dismiss="alert" href="#">×</a>
           <span class="label label-warning">Issues</span>
-          何か問題があれば、@gam0022 まで連絡お願いします。</p>
+          何か問題があれば、@gam0022 まで連絡お願いします。
+          </p>
           <p><a class="btn" href="https://twitter.com/gam0022">@gam0022 &raquo;</a></p>
         </div>
         <div class="span5 well" id="info">
           <a class="close" data-dismiss="alert" href="#">×</a>
-          <p><span class="label label-info">Info</span>
-          ソースコードは github にて公開しています。</p>
+          <p>
+          <span class="label label-info">Info</span>
+          ソースコードは github にて公開しています。
+          </p>
           <p><a class="btn" href="https://github.com/gam0022/twincal">github &raquo;</a></p>
         </div>
       </div>
@@ -150,4 +154,3 @@
     </div> <!-- /container -->
   </body>
 </html>
-

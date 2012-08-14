@@ -20,8 +20,10 @@ end
 begin
   cgi = CGI.new
 
-  # 時間割の配列
-  subjects, term_end, user = parse_params(cgi.params)
+  # 授業情報の配列
+  subjects = get_subjects_from_params(cgi.params)
+  # 学期の終了日時(フォーマット済み)
+  term_end = get_term_end(cgi.params)
 
   # ビュー
   puts 'Content-Disposition: attachment; filename="twincal.ics"'
@@ -30,12 +32,11 @@ begin
     "type"=>'application/octet-stream; name="twincal.ics"'
   )
   puts View.new(subjects, term_end).to_ics
-  log(user)
 
-rescue
-  # エラー
-  print cgi.header( { 
-    "status"     => "REDIRECT",
-    "Location"   => "http://gam0022.net/app/twincal/?has_error=true"
-  })
+  # ログ
+  log(cgi.params["user"][0], "./success.log")
+
+rescue => e
+  # エラー処理
+  exception_handling(e, cgi) 
 end
