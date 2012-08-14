@@ -26,12 +26,12 @@ begin
   term_end = get_term_end(cgi.params)
 
   # ビュー
-  puts 'Content-Disposition: attachment; filename="twincal.ics"'
-  puts cgi.header(
+  print "Content-Disposition: attachment; filename=\"twincal.ics\"\r\n"
+  print cgi.header(
     "charset"=>"UTF-8",
     "type"=>'application/octet-stream; name="twincal.ics"'
   )
-  puts View.new(subjects, term_end).to_ics
+  print View.new(subjects, term_end).to_ics
 
   # ログ
   log(cgi.params["user"][0], "./success.log")

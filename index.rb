@@ -20,8 +20,8 @@ begin
   has_error = cgi.params["has_error"][0]
 
   # ビュー
-  puts cgi.header("charset"=>"UTF-8")
-  puts View.new(has_error).to_html
+  print cgi.header("charset"=>"UTF-8")
+  print View.new(has_error).to_html
 
 rescue => e
   # エラー処理

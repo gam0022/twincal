@@ -37,8 +37,8 @@ begin
   user = table[1][5]
 
   # ビュー
-  puts cgi.header("charset"=>"UTF-8")
-  puts View.new(subjects, user).to_html
+  print cgi.header("charset"=>"UTF-8")
+  print View.new(subjects, user).to_html
 
 rescue => e
   # エラー処理
