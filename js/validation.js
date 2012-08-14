@@ -6,7 +6,7 @@ $(function(){
       //必須項目のチェック
       $(this).filter(".required").each(function(){
         if($(this).val()==""){
-        $(this).parent().prepend('<p class="alert alert-error"><a class="close" data-dismiss="alert" href="#"> ×</a>必須項目です。</p>')
+        $(this).parent().prepend('<p class="alert alert-error"><a class="close" data-dismiss="alert" href="#">×</a>  選択してください。</p>')
         }
       })
     })

@@ -30,7 +30,8 @@ begin
   table = CSV.parse(cgi.params['file'][0].read.encode("UTF-8", "CP932"))
 
   # CSVテーブルの大きさをチェックする
-  raise "invalid csv file" if table.size != VALID_ROWS || table[0].size != VALID_COLS
+  # (行数は履修した選択科目数により変化する)
+  raise "invalid csv table size" if table.size < VALID_ROWS || table[0].size != VALID_COLS
 
   # 時間割の配列
   subjects = get_subjects_from_table(table)

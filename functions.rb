@@ -53,7 +53,7 @@ def get_subjects_from_table(table)
           s[:dump] = s.values.join("::")
           subjects.push s
         else
-          raise "invalid csv file"
+          raise "invalid csv file (cannot parse string)"
         end
       end
     end
