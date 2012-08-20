@@ -38,8 +38,8 @@
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit">
         <h1>TwinCal</h1>
-        <p>TwinCalとは、Twinsからダウンロードした履修情報を含むCSVファイルをiCalendar形式に変換し、
-        Googleカレンダー・iCalへのインポートをサポートするWebアプリケーションです。</p>
+        <p>TwinCalとは、Twinsの時間割をiCalendar形式に変換し、
+        Googleカレンダー・iCalへのインポートをサポートするWebサービスです。</p>
       </div>
 
       <section id="setp1">
@@ -69,7 +69,7 @@
       </div>
       <div class="row">
         <div class="span12" id="form-error">
-          <p>Step1でダウンロードしたCSVを指定してください。</p>
+          <p><strong>下のフォームに</strong>Step1でダウンロードしたCSVを指定してください。</p>
           <form method="post" action="parse.rb" class="span6 well form-search" id="form1" enctype="multipart/form-data">
             <% if @has_error %>
               <p class="alert alert-error">
@@ -133,6 +133,8 @@
           何か問題があれば、@gam0022 まで連絡お願いします。
           </p>
           <p><a class="btn" href="https://twitter.com/gam0022">@gam0022 &raquo;</a></p>
+          <p><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://gam0022.net/app/twincal/" data-text="Twinsに登録した時間割をGoogleカレンダーやiCalにインポートするWebサービス「TwinCal」" data-via="gam0022" data-lang="ja" data-hashtags="twincal">ツイート</a>
+          <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></p>
         </div>
         <div class="span5 well" id="info">
           <a class="close" data-dismiss="alert" href="#">×</a>
