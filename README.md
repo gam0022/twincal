@@ -1,6 +1,5 @@
 ## TwinCal
 
-TwinCalとは、Twinsからダウンロードした履修情報を含むCSVファイルをiCalendar形式に変換し、 
-Googleカレンダー・iCalへのインポートをサポートするWebアプリケーションです。
+TwinCalとは、Twinsの時間割をiCalendar形式に変換し、 Googleカレンダー・iCalへのインポートをサポートするWebサービスです。
 
 [TwinCal](http://gam0022.net/app/twincal/)
