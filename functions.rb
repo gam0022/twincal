@@ -24,8 +24,9 @@ LOCATIONS = {
 #
 # CSVテーブルを授業ごとの配列に変換する
 #
-def get_subjects_from_table(table)
+def get_subjects_from_table(table, opt_merge)
   subjects = Array.new
+  prev_code = ""
 
   # 曜日
   WEEK.each_with_index do |week, i|
@@ -36,22 +37,32 @@ def get_subjects_from_table(table)
       if ((code_class = table[crow][ccol]) != "未登録")
         # GB12016　1A:専門科目（必修）
         if /(\w+)　(.+)/ =~ code_class
-          s = {
-            :wday     => i,
-            :period   => j,
-            :time     => "#{week}#{j+1}",
-            :time_jp  => "#{WEEK_JP[i]}#{j+1}",
-            :code     => $1,
-            :name     => table[crow+1][ccol],
-            :class    => $2,
-            :teacher  => table[crow+2][ccol],
-            :location => LOCATIONS[$1]
-            #:dump
-            #:start
-            #:end
-          }
-          s[:dump] = s.values.join("::")
-          subjects.push s
+          item = Hash.new
+          if opt_merge && $1==prev_code
+            # 前のコマとくっつける
+            item = subjects.pop
+            item[:long] += 1
+            item[:time_jp] = item[:time_jp][0..1] + "-#{j+1}"
+          else
+            item = {
+              :wday     => i,                     # 曜日
+              :period   => j,                     # コマ目
+              :long     => 0,                     # 連コマの場合の授業の長さ
+              :time     => "#{week}#{j+1}",       # 曜日とコマ目
+              :time_jp  => "#{WEEK_JP[i]}#{j+1}", # 曜日とコマ目(日本語表記)
+              :code     => $1,                    # 授業コード
+              :name     => table[crow+1][ccol],   # 授業名
+              :class    => $2,                    # 区分
+              :teacher  => table[crow+2][ccol],   # 教授
+              :location => LOCATIONS[$1]          # 場所
+              #:dump                              # CGIでデータをやりとりするためのダンプ
+              #:start                             # 初回の授業の開始日時
+              #:end                               # 初回の授業の終了日時
+            }
+            prev_code = $1
+          end
+          item[:dump] = item.values.join("::")
+          subjects.push item
         else
           raise "invalid csv file (cannot parse string)"
         end
@@ -105,7 +116,7 @@ end
 def get_subjects_from_params(params)
 
   keys = [
-    :wday, :period, :time, :time_jp, 
+    :wday, :period, :long, :time, :time_jp, 
     :code, :name, :class, :teacher,
     :location, :dump,
     :start, :end
@@ -127,8 +138,9 @@ def get_subjects_from_params(params)
     # 場所
     item[:location] = params["l_#{item[:time]}"][0]
     # 授業の開始日時と終了日時
-    item[:start] = Time.parse("#{term_start_each_wday[item[:wday].to_i]} #{P_START[item[:period].to_i]}").to_icsf
-    item[:end] = Time.parse("#{term_start_each_wday[item[:wday].to_i]} #{P_END[item[:period].to_i]}").to_icsf
+    day = term_start_each_wday[item[:wday].to_i]
+    item[:start]  = Time.parse("#{day} #{P_START[item[:period].to_i]}").to_icsf
+    item[:end]    = Time.parse("#{day} #{P_END[item[:period].to_i + item[:long].to_i]}").to_icsf
   end
 
   return subjects

@@ -29,12 +29,15 @@ begin
   # CSVを2次元配列にしたもの
   table = CSV.parse(cgi.params['file'][0].read.encode("UTF-8", "CP932"))
 
+  # 連続するコマの授業をまとめるオプション
+  opt_merge = cgi.params['opt'].index("merge")
+
   # CSVテーブルの大きさをチェックする
   # (行数は履修した選択科目数により変化する)
   raise "invalid csv table size" if table.size < VALID_ROWS || table[0].size != VALID_COLS
 
   # 時間割の配列
-  subjects = get_subjects_from_table(table)
+  subjects = get_subjects_from_table(table, opt_merge)
   user = table[1][5]
 
   # ビュー

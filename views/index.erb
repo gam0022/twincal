@@ -42,7 +42,7 @@
         Googleカレンダー・iCalへのインポートをサポートするWebサービスです。</p>
       </div>
 
-      <section id="setp1">
+      <section id="step1">
       <div class="page-header">
         <h1><small>Step1</small> TwinsからCSVをダウンロードする</h1>
       </div>
@@ -63,14 +63,14 @@
       </div>
       </section>
 
-      <section id="setp2">
+      <section id="step2">
       <div class="page-header">
         <h1><small>Step2</small> TwinCalを使ってCSVをiCalendar形式に変換する</h1>
       </div>
       <div class="row">
-        <div class="span12" id="form-error">
+        <div class="span12">
           <p><strong>下のフォームに</strong>Step1でダウンロードしたCSVを指定してください。</p>
-          <form method="post" action="parse.rb" class="span6 well form-search" id="form1" enctype="multipart/form-data">
+          <form method="post" action="parse.rb" class="well form-inline" id="form1" enctype="multipart/form-data">
             <% if @has_error %>
               <p class="alert alert-error">
               <a class="close" data-dismiss="alert" href="#">×</a>
@@ -81,13 +81,16 @@
               </script>
             <% end %>
             <input type="file" name="file" id="file" class="validate required">
+            <label class="checkbox">
+              <input type="checkbox" name="opt" value="merge" checked="checked"> コマの連続する授業をまとめる
+            </label>
             <button type="submit" class="btn btn-primary btn-large" id="submit">Submit</button>
           </form>
         </div>
       </div>
       </section>
 
-      <section id="setp3">
+      <section id="step3">
       <div class="page-header">
         <h1><small>Step3</small> Googleカレンダー・iCal にインポートする</h1>
       </div>
