@@ -1,4 +1,4 @@
-#! /usr/local/rvm/rubies/ruby-1.9.3-p0/bin/ruby
+#! /usr/bin/ruby
 # -*- coding: utf-8 -*-
 
 require 'cgi'
