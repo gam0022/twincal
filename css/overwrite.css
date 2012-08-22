@@ -5,3 +5,7 @@ section {
 footer {
   text-align: center;
 }
+
+.input-file {
+  margin-right: 50px;
+}
