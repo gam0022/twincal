@@ -150,7 +150,9 @@ end
 # ログ
 # 
 def log(str, file)
-  `echo '#{str} - #{Time.now.to_s}' >> #{file}`
+  open(file, "a") do |f|
+    f.write("#{str} - #{Time.now.to_s}\n")
+  end
 end
 
 #
